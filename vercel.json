@@ -1,5 +1,10 @@
 {
   "version": 2,
   "buildCommand": "npm run build:vercel",
-  "installCommand": "npm ci"
+  "installCommand": "npm ci",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "api/dist/**"
+    }
+  }
 } 
