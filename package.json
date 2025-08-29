@@ -8,7 +8,7 @@
     "prebuild:frontend": "npm run generate:types",
     "build:frontend": "npx nx build vn-record-store-web --prod",
     "build:backend": "cd apps/vn-record-store-be && npx tsc -p tsconfig.app.json",
-    "build:vercel": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend"
+    "build:vercel": "npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend"
   },
   "private": true,
   "devDependencies": {
