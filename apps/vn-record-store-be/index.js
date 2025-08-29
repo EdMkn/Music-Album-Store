@@ -1,2 +1,4 @@
 // Entry point for Vercel deployment
-require('./dist/main.js'); 
+const { handler } = require('./dist/main.js');
+
+module.exports = handler; 
