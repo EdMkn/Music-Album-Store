@@ -6,7 +6,8 @@
     "generate:types": "node scripts/generate-frontend-types.js",
     "watch:types": "node scripts/watch-types.js",
     "prebuild:frontend": "npm run generate:types",
-    "build:frontend": "npx nx build vn-record-store-web --prod"
+    "build:frontend": "npx nx build vn-record-store-web --prod",
+    "build:backend": "npx nx build vn-record-store-be --configuration=production"
   },
   "private": true,
   "devDependencies": {

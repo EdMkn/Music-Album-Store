@@ -1,5 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && ./node_modules/.bin/nx build vn-record-store-be --configuration=production",
+  "buildCommand": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend",
   "installCommand": "npm ci"
 } 
