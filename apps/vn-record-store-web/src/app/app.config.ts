@@ -11,6 +11,7 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache } from '@apollo/client';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApolloLink } from '@apollo/client';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,16 +29,26 @@ export const appConfig: ApplicationConfig = {
       );
       
       if (isPlatformBrowser(platformId) && typeof window !== 'undefined') {
-        // Browser: use relative URL (works for both local dev and Docker)
-        graphqlUrl = '/graphql';
-        console.log('🌐 Apollo Client - Browser mode:', { 
-          graphqlUrl, 
-          origin: window.location.origin,
-          fullUrl: `${window.location.origin}${graphqlUrl}`,
-          platform: 'browser',
-          actualPort: window.location.port,
-          shouldUsePort80: window.location.port === '4200' ? 'ISSUE: Using 4200 instead of 80!' : 'OK'
-        });
+        // Browser: use environment configuration or fallback to relative URL for local dev
+        if (environment.githubPages || environment.production) {
+          graphqlUrl = environment.graphqlUrl;
+          console.log('🌐 Apollo Client - Production/GitHub Pages mode:', { 
+            graphqlUrl, 
+            origin: window.location.origin,
+            isGitHubPages: environment.githubPages,
+            isProduction: environment.production
+          });
+        } else {
+          // Local development: use relative URL
+          graphqlUrl = '/graphql';
+          console.log('🌐 Apollo Client - Local development mode:', { 
+            graphqlUrl, 
+            origin: window.location.origin,
+            fullUrl: `${window.location.origin}${graphqlUrl}`,
+            platform: 'browser',
+            actualPort: window.location.port
+          });
+        }
       } else {
         // SSR: Choose URL based on environment
         if (isDocker) {
