@@ -6,7 +6,7 @@ let app = null;
 async function createNestApp() {
   if (!app) {
     // Import AppModule from the built application
-    const { AppModule } = await import('../dist/main.js');
+    const { AppModule } = require('../dist/main.js');
     
     app = await NestFactory.create(AppModule);
     
