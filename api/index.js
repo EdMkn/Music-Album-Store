@@ -5,8 +5,9 @@ let app = null;
 
 async function createNestApp() {
   if (!app) {
-    // Import AppModule from the built application (path from repo root)
-    const { AppModule } = require('../apps/vn-record-store-be/dist/main.js');
+    // Import AppModule from the built application
+    // In Vercel's serverless environment, the built files are in the function directory
+    const { AppModule } = require('./main.js');
     
     app = await NestFactory.create(AppModule);
     
