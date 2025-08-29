@@ -19,7 +19,7 @@ This guide explains how to deploy the Vinyl Records Store Angular application to
 
 ### 2. Repository Configuration
 
-The workflow is already configured to work with the repository name `vinyl-records-store`. If your repository has a different name, update the `base-href` in the workflow file:
+The workflow is configured to work with the repository name `Music-Album-Store`. If your repository has a different name, update the `base-href` in the workflow file:
 
 ```yaml
 # In .github/workflows/deploy-github-pages.yml
@@ -58,7 +58,7 @@ The project includes a special `github-pages` configuration that:
    - Build the Angular application
    - Deploy to GitHub Pages
 
-3. Your site will be available at: `https://USERNAME.github.io/vinyl-records-store/`
+3. Your site will be available at: `https://USERNAME.github.io/Music-Album-Store/`
 
 ### Manual Deployment
 
@@ -142,4 +142,4 @@ To use a custom domain:
 - **Site availability**: Monitor your GitHub Pages URL
 - **Performance**: Use browser dev tools to check loading times
 
-Your Vinyl Records Store will be live at: `https://YOUR-USERNAME.github.io/vinyl-records-store/` 
+Your Vinyl Records Store will be live at: `https://YOUR-USERNAME.github.io/Music-Album-Store/` 

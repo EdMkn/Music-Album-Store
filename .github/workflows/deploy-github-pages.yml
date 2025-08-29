@@ -54,6 +54,14 @@ jobs:
       env:
         NODE_ENV: production
 
+    - name: Prepare files for GitHub Pages
+      run: |
+        cd dist/apps/vn-record-store-web/browser
+        # Copy index.csr.html to index.html for GitHub Pages
+        cp index.csr.html index.html
+        echo "Files prepared for GitHub Pages:"
+        ls -la
+
     - name: List build output
       run: |
         echo "Build output directory contents:"

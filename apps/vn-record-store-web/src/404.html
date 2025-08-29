@@ -3,34 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Vinyl Records Store</title>
-  <meta http-equiv="refresh" content="0; url=../">
   <script>
-    // Simple redirect to root for GitHub Pages SPA
-    // This prevents the infinite loop issue
-    (function() {
-      var path = window.location.pathname;
-      var base = '/Music-Album-Store/';
-      
-      // Only redirect if we're not already at the base path
-      if (path !== base && path !== base.slice(0, -1)) {
-        // Extract the route part after the base path
-        var route = path.replace(base, '');
-        if (route) {
-          // Redirect to base with hash routing
-          window.location.replace(base + '#/' + route + window.location.search + window.location.hash);
-        } else {
-          // Just redirect to base
-          window.location.replace(base);
-        }
-      }
-    })();
+    // Simple redirect to app home
+    window.location.href = '/Music-Album-Store/';
   </script>
 </head>
 <body>
   <div style="text-align: center; margin-top: 50px; font-family: Arial, sans-serif;">
     <h1>🎵 Vinyl Records Store</h1>
     <p>Redirecting to the application...</p>
-    <p>If you are not redirected automatically, <a href="../">click here</a>.</p>
+    <p>If you are not redirected automatically, <a href="/Music-Album-Store/">click here</a>.</p>
   </div>
 </body>
 </html> 
