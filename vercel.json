@@ -5,6 +5,12 @@
   "functions": {
     "api/index.js": {
       "includeFiles": "api/dist/**"
+    },
+    "api/[...all].js": {
+      "includeFiles": "api/dist/**"
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/graphql", "destination": "/api/graphql" }
+  ]
 } 
