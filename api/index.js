@@ -26,6 +26,12 @@ async function createNestExpressApp() {
 module.exports = async (req, res) => {
   try {
     const expressInstance = await createNestExpressApp();
+
+    // Only rewrite /api/graphql -> /graphql; leave other /api routes intact
+    if (typeof req.url === 'string' && req.url.startsWith('/api/graphql')) {
+      req.url = req.url.replace(/^\/api\/graphql/, '/graphql');
+    }
+
     return expressInstance(req, res);
   } catch (error) {
     console.error('Error in serverless function:', error);
