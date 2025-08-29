@@ -50,7 +50,7 @@ jobs:
       run: npm run generate:types || echo "Type generation failed or not needed"
 
     - name: Build Angular app for GitHub Pages
-      run: npx nx build vn-record-store-web --configuration=github-pages --base-href="/vinyl-records-store/"
+      run: npx nx build vn-record-store-web --configuration=github-pages --base-href="/Music-Album-Store/"
       env:
         NODE_ENV: production
 
