@@ -26,4 +26,10 @@ async function bootstrap() {
   );
 }
 
-bootstrap();
+// Export AppModule for serverless function
+export { AppModule };
+
+// Only run bootstrap if not in Vercel environment
+if (!process.env.VERCEL) {
+  bootstrap();
+}
