@@ -7,7 +7,8 @@
     "watch:types": "node scripts/watch-types.js",
     "prebuild:frontend": "npm run generate:types",
     "build:frontend": "npx nx build vn-record-store-web --prod",
-    "build:backend": "cd apps/vn-record-store-be && npx tsc -p tsconfig.app.json"
+    "build:backend": "cd apps/vn-record-store-be && rm -rf ../../api/dist && npx tsc -p tsconfig.app.json --outDir ../../api/dist",
+    "build:vercel": "npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend && mkdir -p dist && echo '<!doctype html><html><head><meta charset=\"utf-8\"><title>Backend API</title></head><body>Backend API deployed. Use /api endpoints.</body></html>' > dist/index.html"
   },
   "private": true,
   "devDependencies": {
@@ -81,6 +82,7 @@
     "@apollo/server": "^4.12.0",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^11.1.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.0",
     "@nestjs/graphql": "^13.1.0",
     "@nestjs/mapped-types": "*",

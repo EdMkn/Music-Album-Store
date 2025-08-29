@@ -1,5 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend",
-  "installCommand": "npm ci"
+  "buildCommand": "npm run build:vercel",
+  "installCommand": "npm ci",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "api/dist/**"
+    },
+    "api/[...all].js": {
+      "includeFiles": "api/dist/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/graphql", "destination": "/api/graphql" }
+  ]
 } 
