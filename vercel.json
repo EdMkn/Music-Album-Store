@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:vercel",
-  "installCommand": "npm ci",
-  "outputDirectory": "apps/vn-record-store-be/dist"
+  "buildCommand": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend && cp -r apps/vn-record-store-be/dist/* api/",
+  "installCommand": "npm ci"
 } 
