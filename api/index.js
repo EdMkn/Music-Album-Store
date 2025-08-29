@@ -6,7 +6,7 @@ let app = null;
 async function createNestApp() {
   if (!app) {
     // Import AppModule from the built application (path from repo root)
-    const { AppModule } = require('../dist/main.js');
+    const { AppModule } = require('../apps/vn-record-store-be/dist/main.js');
     
     app = await NestFactory.create(AppModule);
     
