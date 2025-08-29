@@ -71,6 +71,7 @@ jobs:
 
     - name: Create production environment file
       run: |
+        mkdir -p apps/vn-record-store-web/src/environments
         cat > apps/vn-record-store-web/src/environments/environment.prod.ts << 'EOF'
         export const environment = {
           production: true,
