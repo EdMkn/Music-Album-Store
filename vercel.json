@@ -4,7 +4,10 @@
   "installCommand": "npm ci",
   "functions": {
     "api/index.js": {
-      "includeFiles": "api/dist/**"
+      "includeFiles": [
+        "api/dist/**",
+        "apps/vn-record-store-be/dist/**"
+      ]
     }
   }
 } 

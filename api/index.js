@@ -1,10 +1,24 @@
 const { NestFactory } = require('@nestjs/core');
+const fs = require('fs');
+const path = require('path');
 
 let cachedExpressApp = null;
 
+function requireAppModule() {
+  const pathA = path.join(__dirname, 'dist', 'main.js');
+  if (fs.existsSync(pathA)) {
+    return require(pathA);
+  }
+  const pathB = path.join(__dirname, '..', 'apps', 'vn-record-store-be', 'dist', 'main.js');
+  if (fs.existsSync(pathB)) {
+    return require(pathB);
+  }
+  throw new Error('AppModule bundle not found at ' + pathA + ' or ' + pathB);
+}
+
 async function createNestExpressApp() {
   if (!cachedExpressApp) {
-    const { AppModule } = require('./dist/main.js');
+    const { AppModule } = requireAppModule();
 
     const nestApp = await NestFactory.create(AppModule);
     nestApp.enableCors({
