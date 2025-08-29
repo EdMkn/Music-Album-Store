@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Float } from '@nestjs/graphql';
 import { AlbumOrderItem } from './album-order-item.entity';
 import { OrderStatus } from '@prisma/client';
 

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
@@ -18,18 +18,20 @@ export class OrdersResolver {
     return this.ordersService.findAll();
   }
 
-  @Query(() => Order, { name: 'order', nullable: true })
+  @Query(() => Order, { name: 'order' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.ordersService.findOne(id);
   }
 
   @Mutation(() => Order)
   updateOrder(@Args('updateOrderInput') updateOrderInput: UpdateOrderInput) {
-    return this.ordersService.update(updateOrderInput.id, updateOrderInput);
+    // Extract only the properties that Prisma can handle
+    const { id, totalAmount } = updateOrderInput;
+    return this.ordersService.update(id, { totalAmount });
   }
 
   @Mutation(() => Order)
-  removeOrder(@Args('id', { type: () => Int }) id: number) {
+  removeOrder(@Args('id', { type: () => String }) id: string) {
     return this.ordersService.remove(id);
   }
 }
