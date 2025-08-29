@@ -1,28 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npx nx build vn-record-store-be --configuration=production",
-  "installCommand": "cd ../.. && npm ci",
-  "outputDirectory": "dist",
-  "routes": [
+  "builds": [
     {
-      "src": "/api/(.*)",
-      "dest": "/main.js"
-    },
-    {
-      "src": "/graphql",
-      "dest": "/main.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/main.js"
+      "src": "dist/main.js",
+      "use": "@vercel/node"
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "dist/main.js": {
-      "maxDuration": 30
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/main.js"
     }
-  }
+  ],
+  "buildCommand": "cd ../.. && npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npx nx build vn-record-store-be --configuration=production",
+  "installCommand": "cd ../.. && npm ci"
 } 
