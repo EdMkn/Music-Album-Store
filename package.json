@@ -7,7 +7,8 @@
     "watch:types": "node scripts/watch-types.js",
     "prebuild:frontend": "npm run generate:types",
     "build:frontend": "npx nx build vn-record-store-web --prod",
-    "build:backend": "cd apps/vn-record-store-be && npx tsc -p tsconfig.app.json"
+    "build:backend": "cd apps/vn-record-store-be && npx tsc -p tsconfig.app.json",
+    "build:vercel": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npm run build:backend && cp api/index.js apps/vn-record-store-be/dist/ && mkdir -p apps/vn-record-store-be/dist/api && mv apps/vn-record-store-be/dist/index.js apps/vn-record-store-be/dist/api/"
   },
   "private": true,
   "devDependencies": {
