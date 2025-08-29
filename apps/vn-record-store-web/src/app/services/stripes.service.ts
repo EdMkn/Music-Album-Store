@@ -2,6 +2,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { CartStore } from '../stores/cart.store';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,15 @@ export class StripesService {
 
   private get apiUrl(): string {
     if (isPlatformBrowser(this.platformId) && typeof window !== 'undefined') {
-      console.log('🌐 Stripe Service - Browser mode: /api');
-      return '/api';
+      // Browser: use environment configuration or fallback to relative URL for local dev
+      if (environment.githubPages || environment.production) {
+        console.log('🌐 Stripe Service - Production/GitHub Pages mode:', environment.apiBaseUrl);
+        return environment.apiBaseUrl;
+      } else {
+        // Local development: use relative URL (proxied to backend)
+        console.log('🌐 Stripe Service - Local development mode: /api');
+        return '/api';
+      }
     }
     
     // SSR: Check environment for proper URL
