@@ -46,6 +46,9 @@
       }
     }
   },
+  "scripts": {
+    "start": "node dist/main.js"
+  },
   "prisma": {
     "seed": "npx ts-node --project ./prisma/tsconfig.json ./prisma/seed.ts"
   },

@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/vn-record-store-be/dist/main.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "apps/vn-record-store-be/dist/**",
+          "apps/vn-record-store-be/prisma/**",
+          "node_modules/.prisma/**",
+          "node_modules/@prisma/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/apps/vn-record-store-be/dist/main.js"
+    },
+    {
+      "src": "/graphql",
+      "dest": "/apps/vn-record-store-be/dist/main.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/apps/vn-record-store-be/dist/main.js"
+    }
+  ],
+  "buildCommand": "npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npx nx build vn-record-store-be --configuration=production",
+  "installCommand": "npm ci",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "apps/vn-record-store-be/dist/main.js": {
+      "maxDuration": 30
+    }
+  }
+} 

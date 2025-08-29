@@ -19,13 +19,19 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  # Default values - can be overridden by repository secrets
+  REPO_NAME: Music-Album-Store
+  NODE_VERSION: 20.x
+  BUILD_CONFIGURATION: github-pages
+
 jobs:
   build:
     runs-on: ubuntu-latest
     
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: ["20.x"]
 
     steps:
     - name: Checkout
@@ -50,9 +56,20 @@ jobs:
       run: npm run generate:types || echo "Type generation failed or not needed"
 
     - name: Build Angular app for GitHub Pages
-      run: npx nx build vn-record-store-web --configuration=github-pages --base-href="/Music-Album-Store/"
+      run: npx nx build vn-record-store-web --configuration=${{ env.BUILD_CONFIGURATION }} --base-href="/${{ secrets.REPO_NAME || env.REPO_NAME }}/"
       env:
         NODE_ENV: production
+        # Backend configuration secrets (for future use)
+        BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+        GRAPHQL_URL: ${{ secrets.GRAPHQL_URL }}
+        # Stripe configuration (if needed for client-side)
+        STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+        # API configuration
+        API_BASE_URL: ${{ secrets.API_BASE_URL }}
+        # Environment flag
+        PRODUCTION: true
+        GITHUB_PAGES: true
 
     - name: Prepare files for GitHub Pages
       run: |
@@ -61,6 +78,8 @@ jobs:
         cp index.csr.html index.html
         echo "Files prepared for GitHub Pages:"
         ls -la
+        echo "Repository: ${{ secrets.REPO_NAME || env.REPO_NAME }}"
+        echo "Base URL will be: https://${{ github.repository_owner }}.github.io/${{ secrets.REPO_NAME || env.REPO_NAME }}/"
 
     - name: List build output
       run: |
@@ -85,4 +104,11 @@ jobs:
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4 
+      uses: actions/deploy-pages@v4
+
+    - name: Deployment Summary
+      run: |
+        echo "🚀 Deployment completed successfully!"
+        echo "📍 Site URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔧 Repository: ${{ github.repository }}"
+        echo "📦 Build Configuration: ${{ env.BUILD_CONFIGURATION }}" 
