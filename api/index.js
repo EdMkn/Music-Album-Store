@@ -48,7 +48,22 @@ module.exports = async (req, res) => {
 
     return expressInstance(req, res);
   } catch (error) {
-    console.error('Error in serverless function:', error);
-    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    try {
+      const currentDir = __dirname;
+      const parentDir = path.dirname(currentDir);
+      const currentFiles = fs.readdirSync(currentDir);
+      const parentFiles = fs.readdirSync(parentDir);
+      return res.status(500).json({
+        error: 'Internal Server Error',
+        message: error.message,
+        currentDir,
+        parentDir,
+        currentFiles,
+        parentFiles,
+        expected: ['api/dist/main.js', 'apps/vn-record-store-be/dist/main.js']
+      });
+    } catch (_) {
+      return res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
   }
 }; 
