@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "index.js"
-    }
-  ],
   "buildCommand": "cd ../.. && npm ci && npx prisma generate --schema=./apps/vn-record-store-be/prisma/schema.prisma && npx nx build vn-record-store-be --configuration=production",
   "installCommand": "cd ../.. && npm ci"
 } 
