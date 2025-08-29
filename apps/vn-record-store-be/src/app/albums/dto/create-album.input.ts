@@ -3,34 +3,34 @@ import { InputType, Field, Int } from '@nestjs/graphql';
 @InputType()
 export class CreateAlbumInput {
   @Field(() => String)
-  name: string;
+  name!: string;
 
   @Field(() => String)
-  artist: string;
+  artist!: string;
 
   @Field(() => String)
-  description: string;
+  description!: string;
 
   @Field(() => Number)
-  price: number;
+  price!: number;
 
   @Field(() => String)
-  image: string;
+  image!: string;
 
   @Field(() => String)
-  genre: string;
+  genre!: string;
 
   @Field(() => Int)
-  releaseYear: number;
+  releaseYear!: number;
 
   @Field(() => Int)
-  trackCount: number;
+  trackCount!: number;
 
   @Field(() => String)
-  duration: string;
+  duration!: string;
 
   @Field(() => String)
-  stripePriceId: string;
+  stripePriceId!: string;
 
   @Field(() => Boolean, { nullable: true })
   isFeatured?: boolean;
