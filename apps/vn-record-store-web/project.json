@@ -20,6 +20,11 @@
           {
             "glob": "**/*",
             "input": "apps/vn-record-store-web/public"
+          },
+          {
+            "glob": "404.html",
+            "input": "apps/vn-record-store-web/src",
+            "output": "/"
           }
         ],
         "styles": ["apps/vn-record-store-web/src/styles.scss"],
@@ -50,6 +55,22 @@
           "optimization": false,
           "extractLicenses": false,
           "sourceMap": true
+        },
+        "github-pages": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "outputMode": "static"
         }
       },
       "defaultConfiguration": "production"
