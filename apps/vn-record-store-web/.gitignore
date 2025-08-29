@@ -1,25 +1,31 @@
-# Dependencies
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+
+# Node modules
 node_modules
-npm-debug.log
-yarn-error.log
-pnpm-debug.log
-package-lock.json
-yarn.lock
 
-# Angular build output
-dist
-build
-.tmp
-
-# Test / coverage
-coverage
-*.spec.ts
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
 # Environment files
-*.env
-*.local
-src/environments/environment*.ts
+.env
+.env.local
 
-# OS files
+# System files
 .DS_Store
 Thumbs.db
+
+# Angular specific
+/.angular/cache
