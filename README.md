@@ -1,301 +1,179 @@
 # Vinyl Records Store
 
-A modern e-commerce platform for vinyl record enthusiasts, built with Angular, NestJS, and Prisma. Developed with AI assistance to ensure robust architecture and best practices.
+> A small e-commerce platform built to learn the NestJS + GraphQL + Prisma stack hands-on.
 
-## Features
+🇬🇧 English version below — 🇫🇷 version française plus bas
 
-- **Vinyl Album Catalog**: Browse a curated collection of classic and modern vinyl records
-- **Genre Filtering**: Filter albums by genre (Rock, Pop, Hip Hop, R&B, etc.)
-- **Search Functionality**: Search albums by title, artist, or genre
-- **Shopping Cart**: Add albums to cart with quantity management
-- **Secure Checkout**: Integrated Stripe payment processing
-- **Responsive Design**: Beautiful, modern UI that works on all devices
-- **Server-Side Rendering**: Optimized Angular SSR with proper hydration
-- **Docker Deployment**: Complete containerized setup with nginx reverse proxy
+🔗 **Live demo** : [https://edmkn.github.io/Music-Album-Store/#/home]
+📦 **Repo** : github.com/EdMkn/Music-Album-Store
 
-## Tech Stack
+---
 
-- **Frontend**: Angular 19 with NgRx Signals, SSR-enabled
-- **Backend**: NestJS with GraphQL API
-- **Database**: PostgreSQL with Prisma ORM
-- **Reverse Proxy**: Nginx for routing and performance
-- **Styling**: Tailwind CSS with DaisyUI
-- **Payment**: Stripe integration
-- **Build Tool**: Nx monorepo
-- **Containerization**: Docker & Docker Compose
-- **Type Generation**: Automated TypeScript types from Prisma schema
+## 🇬🇧 English
 
-## Architecture
+### Why this project
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Nginx Proxy   │    │  Angular Frontend │    │  NestJS Backend │
-│   (Port 80)     │◄───┤   (Port 4200)    │◄───┤   (Port 3000)   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         │              ┌────────▼────────┐             │
-         │              │  Type Generator │             │
-         │              │   (Build Time)  │             │
-         │              └─────────────────┘             │
-         │                                              │
-         └──────────────────────┬───────────────────────┘
-                                │
-                    ┌───────────▼────────────┐    ┌─────────────┐
-                    │   PostgreSQL Database  │    │   Seeder    │
-                    │      (Port 5432)       │◄───┤ (Run Once)  │
-                    └────────────────────────┘    └─────────────┘
-```
+I built Vinyl Records Store to learn three technologies I hadn't used before — NestJS, GraphQL, and Prisma — in a single coherent project rather than through isolated tutorials.
 
-## Getting Started
+I picked an e-commerce use case on purpose: it forces you to deal with real-world concerns (a typed schema, persistence, payments, async flows) without inventing artificial complexity. The "vinyl records" theme is just there to make the catalog less boring than the usual "products" demo.
 
-### Prerequisites
+This is **not a production product**. It's a working prototype I can run, deploy, and reason about — and a base I keep extending when I want to try something new (auth, observability, testing, etc.).
 
-**For Local Development:**
-- Node.js 18+
-- PostgreSQL database
-- Stripe account (for payments)
+### What I learned (the honest version)
 
-**For Docker (Recommended):**
-- Docker Engine 20.10+
-- Docker Compose 2.0+
+**GraphQL on both sides was harder than expected.** Wiring up NestJS resolvers with a code-first schema was the easy part. The hard part was on the Angular side: figuring out the right Apollo Client setup, handling cache normalization, and avoiding the trap of re-fetching everything on every navigation. I rewrote the data layer twice before I got something I was comfortable with.
 
-### 🐳 Docker Setup (Recommended)
+**Prisma's "easy" migrations have a learning curve.** I started using `prisma db push` everywhere because it "just worked". Then I tried to add a column in production-like conditions and realized the difference between `db push` (good for prototyping) and `migrate dev` / `migrate deploy` (what you actually want for real schema changes). Painful but useful lesson.
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd vinyl-records-store
-   ```
+**SSR + GraphQL + hydration is a real footgun.** Angular SSR works fine until you add GraphQL queries that fire client-side after hydration — then you get flicker, duplicate fetches, and console warnings. I had to learn how to transfer state from server to client properly. Still not perfect.
 
-2. **Set up environment variables**
-   ```bash
-   cp env.example .env
-   # Edit .env with your Stripe keys
-   ```
+**Stripe Checkout was the smoothest part.** Choosing Stripe Checkout over Payment Intents was a deliberate trade-off: less UX control, but PCI compliance offloaded entirely. For a portfolio project, that was the right call.
 
-3. **Start the application**
-   ```bash
-   docker-compose up -d
-   ```
+### Architecture
 
-4. **Access the application**
-   - **Frontend**: http://localhost (via Nginx proxy)
-   - **GraphQL API**: http://localhost/graphql
-   - **Backend API**: http://localhost/api
-   - **Database**: Automatically seeded with sample albums
+┌──────────────┐       ┌────────────────┐       ┌─────────────────┐
+│ Nginx proxy  │───────▶│ Angular 19 SSR │───────▶│ NestJS GraphQL  │
+│   port 80    │        │  Apollo Client │        │     API         │
+└──────────────┘        └────────────────┘        └────────┬────────┘
+│
+┌─────────▼─────────┐
+│ PostgreSQL        │
+│ (Prisma ORM)      │
+└───────────────────┘
+▲
+│  Stripe Checkout (external)
 
-### 💻 Local Development Setup
+A type-generation script reads the Prisma schema and produces TypeScript interfaces for the frontend, so the contract stays in sync without manual maintenance.
 
-1. **Clone and install**
-   ```bash
-   git clone <repository-url>
-   cd vinyl-records-store
-   npm install
-   ```
+### Tech stack
 
-2. **Generate TypeScript types**
-   ```bash
-   # Generate frontend types from Prisma schema
-   npm run generate:types
-   
-   # Or watch for schema changes during development
-   npm run watch:types
-   ```
+- **Frontend** — Angular 19 (SSR), Apollo Client, Tailwind + DaisyUI
+- **Backend** — NestJS, GraphQL (code-first), Prisma
+- **Database** — PostgreSQL
+- **Payments** — Stripe Checkout
+- **Infra** — Docker Compose, Nginx reverse proxy, Nx monorepo
 
-3. **Set up environment variables**
-   ```bash
-   # Backend (.env in apps/vn-record-store-be/)
-   DATABASE_URL="postgresql://..."
-   STRIPE_SECRET_KEY="sk_..."
-   ```
+### How AI was used in this project
 
-4. **Run database setup**
-   ```bash
-   cd apps/vn-record-store-be
-   npx prisma migrate dev
-   npx prisma db seed
-   ```
+I used Claude / Cursor as an assistant for **specific, scoped tasks**: explaining patterns I didn't know (Apollo cache strategies, SSR hydration), suggesting alternatives when I was stuck, and generating boilerplate I'd written before. Architecture decisions, trade-off arbitration, and debugging real bugs stayed mine — those are the parts where the assistant is most likely to be confidently wrong.
 
-5. **Start development servers**
-   ```bash
-   # Backend
-   npx nx serve vn-record-store-be
-   
-   # Frontend (in new terminal)
-   npx nx serve vn-record-store-web
-   ```
+### What I'd do differently
 
-## Why Nginx Reverse Proxy?
+- **Add tests from day one.** I have none. Adding them now means working backwards, which is harder than writing them as I go. Top of the backlog.
+- **Plan observability earlier.** I only have Docker logs. Sentry + structured logging would have saved me hours of debugging.
+- **Reconsider GraphQL.** For a catalog this simple, REST would have been faster to build and easier to cache. GraphQL was the right call for learning, not necessarily for the use case.
 
-The Docker setup includes **Nginx as a reverse proxy** for several important benefits:
+### Getting started
 
-### 🌐 **Single Entry Point**
-- All requests go through nginx (port 80)
-- Clean URLs without port numbers
-- Professional deployment setup
-
-### ⚡ **Performance Benefits**
-- **Gzip compression** for faster loading
-- **Static file caching** for images and assets
-- **Load balancing** capabilities for scaling
-
-### 🛡️ **Security & Headers**
-- **Security headers** (XSS protection, CSRF prevention)
-- **SSL termination** support (HTTPS)
-- **Request filtering** and rate limiting
-
-### 🔧 **Request Routing**
-```
-http://localhost/          → Angular Frontend
-http://localhost/api/      → NestJS Backend  
-http://localhost/graphql   → GraphQL API
-```
-
-Without nginx, you'd need to access services on different ports (`:3000`, `:4200`), which is less professional and harder to manage in production.
-
-## Type Generation System
-
-This project uses an **automated type generation system** that keeps frontend TypeScript types in sync with the Prisma database schema.
-
-### 🔄 How It Works
-
-1. **Prisma Schema** (`apps/vn-record-store-be/prisma/schema.prisma`) - Single source of truth
-2. **Type Generator** (`scripts/generate-frontend-types.js`) - Parses schema and generates types
-3. **Frontend Types** (`apps/vn-record-store-web/src/app/types/album.types.ts`) - Auto-generated TypeScript interfaces
-
-### 📝 Available Commands
+**Docker (recommended)**
 
 ```bash
-# Generate types once
+git clone <repository-url>
+cd vinyl-records-store
+cp env.example .env  # fill in Stripe keys
+docker-compose up -d
+```
+
+The app is then available at `http://localhost`.
+
+**Local development**
+
+```bash
+npm install
 npm run generate:types
-
-# Watch schema for changes (development)
-npm run watch:types
-
-# Build frontend (auto-generates types first)  
-npm run build:frontend
+cd apps/vn-record-store-be
+npx prisma migrate dev
+npx prisma db seed
+npx nx serve vn-record-store-be   # terminal 1
+npx nx serve vn-record-store-web  # terminal 2
 ```
 
-### 🔧 When You Modify the Database Schema
+See `DOCKER_README.md` for more on the Docker setup.
+
+---
+
+## 🇫🇷 Français
+
+### Pourquoi ce projet
+
+J'ai construit Vinyl Records Store pour apprendre trois technologies que je n'avais jamais utilisées — NestJS, GraphQL et Prisma — dans un même projet cohérent plutôt qu'à travers des tutos isolés.
+
+J'ai choisi un cas d'usage e-commerce volontairement : ça oblige à traiter de vraies problématiques (schéma typé, persistance, paiement, flux async) sans inventer une complexité artificielle. Le thème "vinyles" est juste là pour rendre le catalogue moins ennuyeux que le classique "products".
+
+Ce n'est **pas un produit en prod**. C'est un prototype fonctionnel que je peux faire tourner, déployer et expliquer — et une base que je continue d'étendre quand je veux essayer quelque chose de nouveau (auth, observabilité, tests, etc.).
+
+### Ce que j'ai appris (version honnête)
+
+**GraphQL des deux côtés était plus dur que prévu.** Brancher les resolvers NestJS avec un schéma code-first, c'était la partie facile. Le vrai défi était côté Angular : trouver la bonne configuration d'Apollo Client, gérer la normalisation du cache, et éviter de re-fetcher tout à chaque navigation. J'ai réécrit la couche data deux fois avant d'obtenir un truc qui me satisfaisait.
+
+**Les migrations Prisma "faciles" ont un piège.** J'ai commencé par utiliser `prisma db push` partout parce que "ça marche". Puis j'ai essayé d'ajouter une colonne dans des conditions proches de la prod et j'ai compris la différence entre `db push` (bien pour prototyper) et `migrate dev` / `migrate deploy` (ce qu'il faut vraiment pour faire évoluer un schéma). Leçon douloureuse mais utile.
+
+**SSR + GraphQL + hydratation est un piège classique.** Angular SSR marche très bien jusqu'à ce qu'on ajoute des requêtes GraphQL qui se déclenchent côté client après l'hydratation — là on a du flicker, des fetches en double, et des warnings console. J'ai dû apprendre à transférer l'état du serveur au client proprement. Pas encore parfait.
+
+**Stripe Checkout a été la partie la plus fluide.** Choisir Stripe Checkout plutôt que Payment Intents était un trade-off délibéré : moins de contrôle UX, mais conformité PCI entièrement déchargée. Pour un projet portfolio, c'était le bon choix.
+
+### Architecture
+┌──────────────┐       ┌────────────────┐       ┌─────────────────┐
+│ Nginx proxy  │───────▶│ Angular 19 SSR │───────▶│ NestJS GraphQL  │
+│   port 80    │        │  Apollo Client │        │     API         │
+└──────────────┘        └────────────────┘        └────────┬────────┘
+│
+┌─────────▼─────────┐
+│ PostgreSQL        │
+│ (Prisma ORM)      │
+└───────────────────┘
+▲
+│  Stripe Checkout (externe)  
+
+Un script de génération de types lit le schéma Prisma et produit les interfaces TypeScript pour le frontend, ce qui maintient le contrat synchronisé sans maintenance manuelle.
+
+### Stack technique
+
+- **Frontend** — Angular 19 (SSR), Apollo Client, Tailwind + DaisyUI
+- **Backend** — NestJS, GraphQL (code-first), Prisma
+- **Base de données** — PostgreSQL
+- **Paiement** — Stripe Checkout
+- **Infra** — Docker Compose, Nginx reverse proxy, monorepo Nx
+
+### Comment l'IA a été utilisée
+
+J'ai utilisé Claude / Cursor comme assistant sur des **tâches précises et délimitées** : m'expliquer des patterns que je ne connaissais pas (stratégies de cache Apollo, hydratation SSR), proposer des alternatives quand j'étais bloqué, générer du boilerplate déjà écrit ailleurs. Les décisions d'archi, les arbitrages de trade-offs, et le debugging des vrais bugs sont restés à moi — c'est là que l'assistant est le plus susceptible de se tromper avec confiance.
+
+### Ce que je ferais différemment
+
+- **Ajouter des tests dès le départ.** Je n'en ai pas. Les ajouter maintenant veut dire travailler à rebours, ce qui est plus dur que de les écrire au fil de l'eau. En haut du backlog.
+- **Planifier l'observabilité plus tôt.** Je n'ai que les logs Docker. Sentry et des logs structurés m'auraient économisé des heures de debug.
+- **Reconsidérer GraphQL.** Pour un catalogue aussi simple, REST aurait été plus rapide à construire et plus facile à mettre en cache. GraphQL était le bon choix pour apprendre, pas forcément pour le cas d'usage.
+
+### Démarrage
+
+**Docker (recommandé)**
 
 ```bash
-# 1. Edit Prisma schema
-vim apps/vn-record-store-be/prisma/schema.prisma
+git clone <repository-url>
+cd vinyl-records-store
+cp env.example .env  # renseigner les clés Stripe
+docker-compose up -d
+```
 
-# 2. Types auto-generate during Docker build, or run manually:
+L'application est ensuite disponible sur `http://localhost`.
+
+**Développement local**
+
+```bash
+npm install
 npm run generate:types
-
-# 3. Frontend types are now in sync!
+cd apps/vn-record-store-be
+npx prisma migrate dev
+npx prisma db seed
+npx nx serve vn-record-store-be   # terminal 1
+npx nx serve vn-record-store-web  # terminal 2
 ```
 
-### ✅ Benefits
+Voir `DOCKER_README.md` pour plus de détails sur le setup Docker.
 
-- **⚡ Faster builds** - No Prisma client generation in frontend (saves ~10 seconds)
-- **🔄 Always in sync** - Types automatically match your database schema
-- **🛡️ Type safety** - Full TypeScript support without manual maintenance
-- **🧹 Clean architecture** - Frontend has no database dependencies
-
-## Project Structure
-
-```
-apps/
-├── vn-record-store-web/          # Angular frontend
-│   └── src/app/types/            # Auto-generated TypeScript types
-├── vn-record-store-be/           # NestJS backend
-│   └── prisma/                   # Database schema & migrations
-└── vn-record-store-assets/       # Static assets
-
-scripts/
-├── generate-frontend-types.js    # Type generation script
-└── watch-types.js               # Development type watcher
-
-docker-compose.yml               # Production container setup
-docker-compose.dev.yml           # Development overrides
-nginx.conf                       # Reverse proxy configuration
-```
-
-## Album Collection
-
-The store features a carefully curated selection of vinyl records including:
-
-- **Classic Rock**: The Beatles, Led Zeppelin, Pink Floyd
-- **Pop**: Michael Jackson, Madonna, Prince
-- **Hip Hop**: Dr. Dre, Nas, Lauryn Hill
-- **Alternative**: Nirvana, Radiohead, Neutral Milk Hotel
-
-Each album includes detailed information:
-- Artist name
-- Release year
-- Genre classification
-- Track count and duration
-- High-quality album artwork
-
-## Quick Commands Reference
-
-```bash
-# 🐳 Docker (Production)
-docker-compose up -d                    # Start all services
-docker-compose logs seeder              # Check database seeding
-docker-compose build frontend           # Rebuild with fresh types
-
-# 💻 Local Development  
-npm run generate:types                  # Generate types once
-npm run watch:types                     # Watch schema for changes
-npm run build:frontend                  # Build with type generation
-
-# 🔧 Schema Changes Workflow
-vim apps/vn-record-store-be/prisma/schema.prisma  # Edit schema
-npm run generate:types                             # Sync types
-docker-compose build frontend                      # Rebuild container
-```
-
-## Docker Services
-
-### Core Services
-- **PostgreSQL Database** (`postgres`): Stores application data
-- **NestJS Backend** (`backend`): GraphQL API server with Prisma ORM
-- **Angular Frontend** (`frontend`): SSR-enabled web application
-- **Nginx Reverse Proxy** (`nginx`): Routes traffic and provides performance optimizations
-- **Database Seeder** (`seeder`): Automatically populates database with sample data
-
-### Service Health
-```bash
-# Check all services
-docker-compose ps
-
-# View service logs
-docker-compose logs [service-name]
-
-# Access services directly
-curl http://localhost/api        # Backend health check
-curl http://localhost/graphql    # GraphQL endpoint
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. **Run type generation** if you modified the Prisma schema
-5. Add tests if applicable
-6. Submit a pull request
-
-## Documentation
-
-- **[Docker Setup Guide](DOCKER_README.md)** - Complete Docker documentation
-- **[Type Generation System](#type-generation-system)** - How automated types work
-- **Environment Setup** - See `.env.example` for configuration
-
-## Development Notes
-
-This project was developed with AI assistance to ensure:
-- **Robust architecture** with proper separation of concerns
-- **Best practices** for Angular SSR and GraphQL integration
-- **Comprehensive Docker setup** with nginx reverse proxy
-- **Automated type generation** for maintainable code
-- **Production-ready configuration** with security considerations
+---
 
 ## License
 
-MIT License - see LICENSE file for details.
-# Sat Aug 30 08:26:21 PM CEST 2025
+MIT — see LICENSE file.
