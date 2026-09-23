@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  githubPages: false,
+  githubPages: true,
   
   // Production URLs (will be overridden by GitHub Actions)
   backendUrl: 'https://music-album-store-7br7nlxca-edmkns-projects.vercel.app',
